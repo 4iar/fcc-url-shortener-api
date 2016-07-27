@@ -26,7 +26,10 @@ app.get('/new/*', (request, response) => {
   } else {
     db.collection('urls').save(dbEntry, (error, result) => {
       if (result) {
-        response.json({ originalUrl, shortUrl });
+        response.json({
+          originalUrl,
+          shortUrl: request.protocol + '://' + request.get('host') + '/' + shortUrl
+        });
       } else {
         response.json({ error: "Failure to store the url in the database. Boourns."})
       }
