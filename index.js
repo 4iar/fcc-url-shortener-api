@@ -23,6 +23,18 @@ app.get('/new/:originalUrl', (request, response) => {
   response.json({ originalUrl, shortUrl });
 });
 
+app.get('/:shortUrl', (request, response) => {
+  const shortUrl = request.params.shortUrl;
+
+  db.collection('urls').find({shortUrl: shortUrl}).limit(1).toArray((error, results) => {
+    if (results.length) {
+      response.redirect(results[0].originalUrl);
+    } else {
+      response.json({error: "You just made that up!"});
+    }
+  })
+})
+
 MongoClient.connect(mongolabUri, (err, database) => {
   if (err) return console.log(err)
   db = database
