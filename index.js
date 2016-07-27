@@ -11,9 +11,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 
-app.get('/new/:originalUrl', (request, response) => {
+app.get('/new/*', (request, response) => {
   const shortUrl = shortenUrl();
-  const originalUrl = request.params.originalUrl;
+  const originalUrl = request.params['0'];
   const dbEntry = { shortUrl, originalUrl };
   
   db.collection('urls').save(dbEntry, (error, result) => {
