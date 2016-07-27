@@ -22,7 +22,11 @@ app.get('/new/*', (request, response) => {
     response.json({ error: "That isn't a valid internet tube" })
   } else {
     db.collection('urls').save(dbEntry, (error, result) => {
-      response.json({ originalUrl, shortUrl });
+      if (result) {
+        response.json({ originalUrl, shortUrl });
+      } else {
+        response.json({ error: "Failure to store the url in the database. Boourns."})
+      }
     })
   }
 });
