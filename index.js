@@ -1,6 +1,8 @@
 "use strict";
 const express = require('express');
 const mongodb = require('mongodb');
+const validUrl = require('valid-url');
+
 const shortenUrl = require('./shortenUrl');
 
 const MongoClient = mongodb.MongoClient;
@@ -15,12 +17,14 @@ app.get('/new/*', (request, response) => {
   const shortUrl = shortenUrl();
   const originalUrl = request.params['0'];
   const dbEntry = { shortUrl, originalUrl };
-  
-  db.collection('urls').save(dbEntry, (error, result) => {
-    console.log(result);
-  })
 
-  response.json({ originalUrl, shortUrl });
+  if (!validUrl.isHttpsUri(originalUrl) && !validUrl.isHttpUri(originalUrl)) {
+    response.json({ error: "That isn't a valid internet tube" })
+  } else {
+    db.collection('urls').save(dbEntry, (error, result) => {
+      response.json({ originalUrl, shortUrl });
+    })
+  }
 });
 
 app.get('/:shortUrl', (request, response) => {
