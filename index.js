@@ -12,6 +12,9 @@ const app = express();
 // let Heroku set the port
 const port = process.env.PORT || 5000;
 
+app.get('/', (request, response) => {
+  response.json({error: "invalid endpoint: use either /new/[https://websitetoshorten.com] or /[shortened-url] instead"});
+})
 
 app.get('/new/*', (request, response) => {
   const shortUrl = shortenUrl();
